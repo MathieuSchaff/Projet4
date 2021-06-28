@@ -11,9 +11,7 @@ function editNav() {
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
-const formData = document.querySelectorAll(".formData");
 const modalBtnNone = document.querySelector('.close');
-const submitBtn = document.querySelector('.btn-submit');
 const last = document.getElementById("last");
 const first = document.getElementById("first");
 const quantity = document.getElementById("quantity");
@@ -21,6 +19,7 @@ const email = document.getElementById("email");
 const form = document.getElementById('form');
 const birthdate = document.getElementById('birthdate');
 const checkboxObligatoire = document.getElementById('checkbox1');
+const modalBody =document.querySelector('.modal-body');
 
 
 // launch modal event
@@ -34,7 +33,11 @@ function launchModal() {
 modalBtnNone.addEventListener('click', function(){
 modalbg.style.display = "none";
 });
-
+window.addEventListener('keydown', function(e){
+  if(e.key === "Escape" || e.key =="esc"){
+    modalbg.style.display = "none";
+  }
+});
 
 // test avec une regex de email. Si email correspond a regex renvoi true, sinon false
 function validateEmail(email) {
@@ -42,7 +45,6 @@ function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 function validateFirstLast(value) {
-  
   return /^[a-z ,.'-]+$/i.test(value)
 }
 function validateDate(date){
@@ -56,48 +58,41 @@ let errors = {
   birthdate: null,
   email: null,
   tournoi: null,
-  location: null,
+  location: true,
   conditions: null,
   newevents: null,
-
 };
-  // FAIRE UN TABLEAU DES NOMS DES PERSONNES INSCRITES 
-  class Users {
-    constructor (first, last, birthdate, email, quantity, location, newEvents){
 
-      this.first = first;
-      this.last = last;
-      this.birthdate = birthdate;
-      this.email = email;
-      this.quantity = quantity;
-      this.location = location;
-      this.newEvents = newEvents;
-    }
+first.addEventListener("change", testFirst);
+last.addEventListener("change", testLast);
+email.addEventListener("change", testEmail); 
+birthdate.addEventListener("change", testBirthdate);
+quantity.addEventListener("change", testTournoi);
+checkboxObligatoire.addEventListener("change", testCheckboxObligatoire);
+// LES EVENT INPUT QUAND VALUE VIDE, enlève l'erreur
+first.addEventListener ("input", function(){
+  if (first.value == ""){
+    errors.first= true;
+    first.closest('.formData').removeAttribute('data-error-visible');
+    first.closest('.formData').removeAttribute('data-error');
   }
-// Tableau des utilisateurs
-let users = [];
-  // errors = {
-  //   first: false pour valider formulaire
-  //   last: false pour valider formulaire
-  //   birthdate: false pour valider formulaire
-  //   email: false pour valider formulaire
-  //   tournoi: false pour valider formulaire
-  //   location: false pour valider formulaire
-  //   conditions: false pour valider formulaire
-  //   newevents: peu importe si true ou false, valeur arbitraire a utiliser pour envoyer des news
-form.addEventListener('submit', function(e){
-  testCheckBoxLocation();
-  if (errors.first || errors.last || errors.birthdate || errors.email || errors.tournoi || errors.location || errors.conditions){
-    e.preventDefault();
-  }else{
-    users.push(new Users(first.value, last.value, birthdate.value, email.value, quantity.value, locationValue, errors.newevents)) 
-  }
-
 });
-// TEST POUR PRENOM 
-first
-  .addEventListener("change", function(e) {
-  if (/^[a-z ,.'-]+$/i.test(e.target.value)) {
+
+last.addEventListener ("input", function(){
+  if (last.value == ""){
+    last.closest('.formData').removeAttribute('data-error-visible');
+    last.closest('.formData').removeAttribute('data-error');
+  }
+});
+email.addEventListener ("input", function(){
+  if (email.value == ""){
+    email.closest('.formData').removeAttribute('data-error-visible');
+    email.closest('.formData').removeAttribute('data-error');
+  }
+});
+// TEST LE PRENOM
+function testFirst() {
+  if (validateFirstLast(first.value)) {
     first.closest('.formData').removeAttribute('data-error-visible');
     first.closest('.formData').removeAttribute('data-error');
     errors.first= false;
@@ -106,19 +101,12 @@ first
     first.closest('.formData').setAttribute('data-error', `Le champ prénom a un minimum de 2 caractères / n'est pas vide.`);
     first.closest('.formData').setAttribute('data-error-visible', true);
   }
-});
-first.addEventListener ("input", function(e){
-  if (first.value == ""){
-    errors.first= true;
-    first.closest('.formData').removeAttribute('data-error-visible');
-    first.closest('.formData').removeAttribute('data-error');
-  }
-});
+}
+
 
 //TEST POUR LE NOM DE FAMILLE
-last
-  .addEventListener("change", function(e) {
-  if (/^[a-z ,.'-]+$/i.test(e.target.value)) {
+  function testLast() {
+  if (validateFirstLast(last.value)) {
     last.closest('.formData').removeAttribute('data-error-visible');
     last.closest('.formData').removeAttribute('data-error');
     errors.last= false;
@@ -127,17 +115,11 @@ last
     last.closest('.formData').setAttribute('data-error', `Le champ Nom a un minimum de 2 caractères / n'est pas vide.`);
     last.closest('.formData').setAttribute('data-error-visible', true);
   }
-});
-last.addEventListener ("input", function(e){
-  if (last.value == ""){
-    last.closest('.formData').removeAttribute('data-error-visible');
-    last.closest('.formData').removeAttribute('data-error');
-  }
-});
-//
+}
+
+
 // TEST POUR EMAIL
-email
-  .addEventListener("change", function() {
+function testEmail() {
     if (validateEmail(email.value)) {
       email.closest('.formData').removeAttribute('data-error-visible');
       email.closest('.formData').removeAttribute('data-error');
@@ -147,16 +129,10 @@ email
       email.closest('.formData').setAttribute('data-error', `Adresse mail incorrecte`);
       email.closest('.formData').setAttribute('data-error-visible', true);
     }
-});
-email.addEventListener ("input", function(){
-  if (email.value == ""){
-    email.closest('.formData').removeAttribute('data-error-visible');
-    email.closest('.formData').removeAttribute('data-error');
-  }
-});
+}
+
 //TEST DATE 
-birthdate
-  .addEventListener("change", function() {
+function testBirthdate() {
   if (validateDate(birthdate.value)) {
     birthdate.closest('.formData').removeAttribute('data-error-visible');
     birthdate.closest('.formData').removeAttribute('data-error');
@@ -166,10 +142,11 @@ birthdate
     birthdate.closest('.formData').setAttribute('data-error', `Date de naissance invalide`);
     birthdate.closest('.formData').setAttribute('data-error-visible', true);
   }
-});
+}
+
+
 // VALIDE LE NOMBRE DE TOURNOI DEJA PARTICIPE
-quantity
-  .addEventListener("change", function(e){
+function testTournoi(){
     if (!quantity.value || quantity.value > 99 || quantity.value < 0){
       quantity.closest('.formData').setAttribute('data-error', `Veuillez rentrer un chiffre entre 0 et 99`);
       quantity.closest('.formData').setAttribute('data-error-visible', true);
@@ -179,10 +156,11 @@ quantity
       quantity.closest('.formData').removeAttribute('data-error');
       quantity.closest('.formData').removeAttribute('data-error-visible');
     }
-});
+}
+
+
 // checkbox obligatoire enlevé si coché
-checkboxObligatoire
-  .addEventListener("change", function(e){
+function testCheckboxObligatoire(){
     if(checkboxObligatoire.checked){
       errors.conditions = false;
       checkboxObligatoire.closest('.formData').removeAttribute('data-error-visible');
@@ -192,7 +170,8 @@ checkboxObligatoire
       checkboxObligatoire.closest('.formData').setAttribute('data-error', `Vous devez acceptez les conditions générales d'utilisations`);
       checkboxObligatoire.closest('.formData').setAttribute('data-error-visible', true);
     }
-});
+}
+
 // Test si l'utilisateur souhaite être prévenu des prochains événements. 
 // Si oui, alors errors.newevents passe à true, sinon false;
 const newsEvent = document.getElementById('checkbox2');
@@ -205,31 +184,99 @@ newsEvent.addEventListener("change", function(){
   }
 });
 
-
-const formLocation = document.getElementById('formLocation');
-let locationValue;
-let radioLocation = document.querySelectorAll('input[name="location"]');
 // Fonction qui regarde si un button type radio est coché
 // Si coché alors locationValue prend la valeur du champ coché
 // Si rien n'est coché alors locationValue est undefined, renvoie false
 //Si coché renvoi true, alors error.location prend la valeur inverse
 // errors.location = fausse si quelque chose est coché, renvoi true si rien n'est coché.
 // errors.location = false pour valider formulaire
+const formLocation = document.getElementById('formLocation');
+let radioLocation = document.querySelectorAll('input[name="location"]');
   function testCheckBoxLocation(){
     for (let loc of radioLocation){
       if(loc.checked){
-        locationValue = loc.value;
-        errors.location = !(Boolean(locationValue));
+        errors.location = false;
         formLocation.removeAttribute('data-error-visible');
         formLocation.removeAttribute('data-error');
-        alert(loc.value)
       }else {
-        errors.location = !(Boolean(locationValue));
         formLocation.setAttribute('data-error', `Vous devez choisir une ville`);
         formLocation.setAttribute('data-error-visible', true);
       }
     }
   }
+
+  form.addEventListener('submit', function(e){
+    testCheckBoxLocation();
+    testFirst();
+    testLast();
+    testEmail();
+    testBirthdate();
+    testTournoi();
+    testCheckboxObligatoire();
+    if (errors.first || errors.last || errors.birthdate || errors.email || errors.tournoi || errors.location || errors.conditions){
+      e.preventDefault();
+    }else {
+      modalBody.innerHTML = `<div class="submitEnd"> Tank you for submitting your registration details</div>
+      
+      <div
+      id="closeButton"
+      class="btn-close">
+      Close
+    </div>
+      
+      `
+      const closeButton = document.getElementById('closeButton');
+      closeButton.addEventListener('click', function(){
+        modalbg.style.display = "none";
+        });
+    }
   
+  });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   class Users {
+//     constructor (first, last, birthdate, email, quantity, location, newEvents){
+
+//       this.first = first;
+//       this.last = last;
+//       this.birthdate = birthdate;
+//       this.email = email;
+//       this.quantity = quantity;
+//       this.location = location;
+//       this.newEvents = newEvents;
+//     }
+//   }
+// // Tableau des utilisateurs
+// let users = [];
+//   // errors = {
+//   //   first: false pour valider formulaire
+//   //   last: false pour valider formulaire
+//   //   birthdate: false pour valider formulaire
+//   //   email: false pour valider formulaire
+//   //   tournoi: false pour valider formulaire
+//   //   location: false pour valider formulaire
+//   //   conditions: false pour valider formulaire
+//   //   newevents: peu importe si true ou false, valeur arbitraire a utiliser pour envoyer des news
