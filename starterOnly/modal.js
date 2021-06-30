@@ -33,6 +33,7 @@ function launchModal() {
 modalBtnNone.addEventListener('click', function(){
 modalbg.style.display = "none";
 });
+// fermer la modale quand appui sur ESC
 window.addEventListener('keydown', function(e){
   if(e.key === "Escape" || e.key =="esc"){
     modalbg.style.display = "none";
@@ -44,14 +45,16 @@ function validateEmail(email) {
   
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
+// test d'un prénom ou nom de famille
 function validateFirstLast(value) {
   return /^[a-z ,.'-]+$/i.test(value)
 }
+// test d'une date 
 function validateDate(date){
   
   return /[0-9]{4}[-|\/]{1}[0-9]{2}[-|\/]{1}[0-9]{2}/.test(date);
 };
-
+// L'objet errors sera appelé pour la validation du formulaire
 let errors = {
   first: null,
   last: null, 
@@ -62,7 +65,7 @@ let errors = {
   conditions: null,
   newevents: null,
 };
-
+// AU CHANGEMENT DE FOCUS, VA TESTER LA VALIDITE DES VALUE RENTRE
 first.addEventListener("change", testFirst);
 last.addEventListener("change", testLast);
 email.addEventListener("change", testEmail); 
@@ -204,7 +207,9 @@ let radioLocation = document.querySelectorAll('input[name="location"]');
       }
     }
   }
-
+// Submit du formulaire => va appeler toutes les fonction qui vont infirmer ou confirmer la value des input qui ont été rentré
+//Chaque fonction qui teste les inputs , va modifier l'objet errors. 
+// Si l'objet errors a une de ses clés qui a la valeur false alors le submit est empéché , si tous les input sont bons, alors un message est écrit pour confirmer la validation du formulaire
   form.addEventListener('submit', function(e){
     testCheckBoxLocation();
     testFirst();
@@ -232,51 +237,3 @@ let radioLocation = document.querySelectorAll('input[name="location"]');
     }
   
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   class Users {
-//     constructor (first, last, birthdate, email, quantity, location, newEvents){
-
-//       this.first = first;
-//       this.last = last;
-//       this.birthdate = birthdate;
-//       this.email = email;
-//       this.quantity = quantity;
-//       this.location = location;
-//       this.newEvents = newEvents;
-//     }
-//   }
-// // Tableau des utilisateurs
-// let users = [];
-//   // errors = {
-//   //   first: false pour valider formulaire
-//   //   last: false pour valider formulaire
-//   //   birthdate: false pour valider formulaire
-//   //   email: false pour valider formulaire
-//   //   tournoi: false pour valider formulaire
-//   //   location: false pour valider formulaire
-//   //   conditions: false pour valider formulaire
-//   //   newevents: peu importe si true ou false, valeur arbitraire a utiliser pour envoyer des news
