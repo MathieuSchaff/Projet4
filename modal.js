@@ -47,6 +47,8 @@ function validateEmail(email) {
 }
 // test d'un prénom ou nom de famille
 function validateFirstLast(value) {
+  // j'enlève les espaces avec la fonction trim
+  value = value.trim();
   return /^[a-z ,.'-]+$/i.test(value)
 }
 // test d'une date 
