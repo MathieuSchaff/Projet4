@@ -1,12 +1,11 @@
-<<<<<<< HEAD
-# Projet4
-Projet 4
-=======
 # Projet GameOn - Premier projet où j'utilise JavaScript
 
 ## Description
 
-Site web permettant de s'inscrire à un événement.
+Je n'ai codé que le JavaScript de ce projet.
 
-J'ai codé la partie JavaScript que vous trouverez dans modal.js
->>>>>>> master
+Il s'agissait de faire fonctionner le formulaire.
+
+Vous pouvez le résultat ici : https://mathieuschaff.github.io/Projet4/
+
+Site web permettant de s'inscrire à un événement.
